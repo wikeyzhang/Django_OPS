@@ -23,6 +23,7 @@ class Cabinet(models.Model):
     site = models.CharField(choices=site_choices, max_length=100, default='hp', verbose_name='位置')
     room = models.CharField(choices=room_site_choices, max_length=100, default='hp', verbose_name='机房')
     name = models.CharField('机柜编号', max_length=16)
+    max_u = models.SmallIntegerField('机柜可用U数', blank=True)
 
     class Meta:
         verbose_name = "机柜"
