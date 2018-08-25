@@ -3,7 +3,7 @@
 import xadmin
 
 from .models import DeviceAssets, ServerAssets, Assets, Cabinet, OS, ServerModel
-from .models import DeviceModel, Manager, IPList, DevicePort
+from .models import DeviceModel, Manager, DevicePort
 
 
 class DeviceAssetsAdmin(object):
@@ -21,7 +21,7 @@ class ServerAssetsAdmin(object):
 
 
 class AssetsAdmin(object):
-    list_display = ['assets_type', 'name', 'sn', 'cabinet', 'init_u', 'manger', 'status']
+    list_display = ['assets_type', 'name', 'sn', 'cabinet', 'init_u', 'manger', 'status', 'up_date']
     search_fields = ['assets_type', 'name', 'sn', 'cabinet', 'manger', 'status']
     list_filter = ['assets_type', 'name', 'sn', 'cabinet', 'manger', 'status']
 
@@ -69,6 +69,5 @@ xadmin.site.register(Cabinet, CabinetAdmin)
 xadmin.site.register(OS, OSAdmin)
 xadmin.site.register(ServerModel, ServerModelAdmin)
 xadmin.site.register(Manager, ManagerAdmin)
-xadmin.site.register(IPList, IPListAdmin)
 xadmin.site.register(DevicePort, DevicePortAdmin)
 xadmin.site.register(DeviceModel, DeviceModelAdmin)
