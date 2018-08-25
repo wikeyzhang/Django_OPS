@@ -20,8 +20,8 @@ class Cabinet(models.Model):
         ('BHroom', u'506机房'),
         ('HQCroom', u'108机房'),
     )
-    site = models.CharField(choices=site_choices, max_length=100, default='hp', verbose_name='位置')
-    room = models.CharField(choices=room_site_choices, max_length=100, default='hp', verbose_name='机房')
+    site = models.CharField(choices=site_choices, max_length=100, default='FG308', verbose_name='位置')
+    room = models.CharField(choices=room_site_choices, max_length=100, default='FG308', verbose_name='机房')
     name = models.CharField('机柜编号', max_length=16)
     max_u = models.SmallIntegerField('机柜可用U数', blank=True)
 
@@ -104,20 +104,6 @@ class Manager(models.Model):
         return self.name
 
 
-class IPList(models.Model):
-    """
-     IP地址
-    """
-    IP_address = models.CharField('IP地址', max_length=32)
-
-    class Meta:
-        verbose_name = "IP地址"
-        verbose_name_plural = verbose_name
-
-    def __str__(self):
-        return self.IP_address
-
-
 class Assets(models.Model):
     assets_type_choices = (
         ('server', u'服务器'),
@@ -133,8 +119,7 @@ class Assets(models.Model):
     init_u = models.SmallIntegerField('机柜起始U数', blank=True)
     manger = models.ForeignKey(Manager, verbose_name='管理员', on_delete=models.SET_NULL, null=True)
     status = models.SmallIntegerField('状态', blank=True, null=True)
-    create_date = models.DateTimeField(auto_now_add=True)
-    update_date = models.DateTimeField(auto_now_add=True)
+    up_date = models.DateField('上架时间', blank=True, null=True)
 
     class Meta:
         verbose_name = "资产信息表"
@@ -147,7 +132,8 @@ class DeviceAssets(models.Model):
     """
     assets = models.OneToOneField('Assets', on_delete=models.CASCADE)
     name = models.CharField('设备名称', max_length=32)
-    ip = models.ManyToManyField(IPList)
+    # ip = models.ManyToManyField(IPList)
+    ip = models.CharField('IP地址', max_length=32, blank=True, null=True)
     model = models.ForeignKey(DeviceModel, on_delete=models.SET_NULL, verbose_name='设备型号', null=True)
 
     class Meta:
@@ -175,7 +161,8 @@ class ServerAssets(models.Model):
     服务器
     """
     assets = models.OneToOneField('Assets', on_delete=models.CASCADE)
-    ip = models.ManyToManyField(IPList)
+    # ip = models.ManyToManyField(IPList)
+    ip = models.CharField('业务IP地址', max_length=32, blank=True, null=True)
     nic1tosw = models.OneToOneField(DevicePort, blank=True, null=True, related_name='ohter01',
                                     on_delete=models.SET_NULL, verbose_name='网口1对应设备端口')
     nic2tosw = models.OneToOneField(DevicePort, blank=True, null=True, related_name='ohter02',
@@ -198,8 +185,9 @@ class ServerAssets(models.Model):
                                     on_delete=models.SET_NULL, verbose_name='FC01网口对应设备端口')
     FC02tosw = models.OneToOneField(DevicePort, blank=True, null=True, related_name='ohter11',
                                     on_delete=models.SET_NULL, verbose_name='FC02网口对应设备端口')
-    mgmt_ip = models.ForeignKey(IPList, blank=True, null=True, related_name='ohter12', on_delete=models.SET_NULL,
-                                verbose_name='管理IP地址')
+    # mgmt_ip = models.ForeignKey(IPList, blank=True, null=True, related_name='ohter12', on_delete=models.SET_NULL,
+    #                             verbose_name='管理IP地址')
+    mgmt_ip = models.CharField('管理IP地址', max_length=32, blank=True, null=True)
     mgmt_user = models.CharField('管理用户', max_length=16, blank=True, null=True)
     mgmt_password = models.CharField('管理密码', max_length=16, blank=True, null=True)
     model = models.ForeignKey(ServerModel, on_delete=models.SET_NULL, null=True, verbose_name='服务器型号')
