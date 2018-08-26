@@ -13,9 +13,46 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+from rest_framework.routers import DefaultRouter
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
+
+import xadmin
+from assets.views import CabinetViewSet, OSViewSet, ServerListViewSet, ServerDetailViewSet
+
+cabinet_list = CabinetViewSet.as_view({
+    'get': 'list',
+    'post': 'create'
+})
+
+cabinet_detail = CabinetViewSet.as_view({
+    'get': 'retrieve',
+    'delete': 'destroy'
+})
+
+os_list = OSViewSet.as_view({
+    'get': 'list'
+})
+
+server_list = ServerListViewSet.as_view({
+    'get': 'list'
+})
+
+server_detail = ServerDetailViewSet.as_view({
+    'get': 'retrieve'
+})
+
+router = DefaultRouter()
+router.register(r'cabinet', CabinetViewSet)
+router.register(r'os', OSViewSet)
+router.register(r'server', ServerListViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^xadmin/', xadmin.site.urls),
+    url(r'^api-token-auth/', obtain_jwt_token),
+
+    url(r'^', include(router.urls))
 ]
+
