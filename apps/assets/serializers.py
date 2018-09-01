@@ -31,6 +31,7 @@ class OSSerializers(serializers.ModelSerializer):
 
 class ServerListSerializers(serializers.ModelSerializer):
     cabinet = serializers.CharField(source='cabinet.name')
+    room = serializers.SerializerMethodField()
     manger = serializers.CharField(source='manger.name')
     mgmt_user = serializers.SerializerMethodField()
     mgmt_password = serializers.SerializerMethodField()
@@ -42,7 +43,7 @@ class ServerListSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Assets
-        fields = ('sn', 'cabinet', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip',
+        fields = ('sn', 'cabinet', 'room', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip',
                   'os', 'model', 'ip', 'device_u', 'up_date')
 
     def get_mgmt_user(self, obj):
@@ -50,7 +51,12 @@ class ServerListSerializers(serializers.ModelSerializer):
 
     def get_mgmt_password(self, obj):
         return obj.assets_ServerAssets.mgmt_password
-
+    
+    def get_room(self,obj):
+        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom':'506机房', 'HQCroom':'108机房'}
+        if obj.cabinet.room:
+            return choices[obj.cabinet.room]
+        
     def get_mgmt_ip(self, obj):
         return obj.assets_ServerAssets.mgmt_ip
 
