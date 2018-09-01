@@ -18,7 +18,7 @@ class OSSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = OS
-        fields = ('name', 'os_server_count')
+        fields = ('id', 'name', 'os_server_count')
 
     def get_os_server_count(self, obj):
         counts = obj.os_ServerAssets.values_list('os').annotate(Count('id'))
