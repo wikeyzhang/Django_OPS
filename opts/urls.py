@@ -28,6 +28,7 @@ router.register(r'os', views.OSViewSet)
 router.register(r'servers', views.ServerListViewSet)
 router.register(r'serverdetail', views.ServerDetailViewSet)
 router.register(r'servercreate', views.ServerCreateViewSet)
+router.register(r'serverdelete', views.ServerDeleteViewSet)
 
 
 urlpatterns = [
