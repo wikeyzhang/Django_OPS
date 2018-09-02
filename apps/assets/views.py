@@ -68,6 +68,8 @@ class ServerCreateViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
                 serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 dict[i] = serializer.data
+
+
         #创建assets
         serializer = AssetsSerializers(data=assetsdata)
         serializer.is_valid(raise_exception=True)
