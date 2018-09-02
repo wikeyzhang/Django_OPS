@@ -3,11 +3,10 @@
 from django.db.models import Count
 from rest_framework import serializers
 
-from assets.models import Cabinet, OS, Assets, ServerAssets
+from assets.models import Cabinet, OS, Assets, ServerAssets, DevicePort
 
 
 class CabinetSerializers(serializers.ModelSerializer):
-
     class Meta:
         model = Cabinet
         fields = ('id', 'name', 'room', 'site', 'max_u')
@@ -51,12 +50,12 @@ class ServerListSerializers(serializers.ModelSerializer):
 
     def get_mgmt_password(self, obj):
         return obj.assets_ServerAssets.mgmt_password
-    
-    def get_room(self,obj):
-        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom':'506机房', 'HQCroom':'108机房'}
+
+    def get_room(self, obj):
+        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom': '506机房', 'HQCroom': '108机房'}
         if obj.cabinet.room:
             return choices[obj.cabinet.room]
-        
+
     def get_mgmt_ip(self, obj):
         return obj.assets_ServerAssets.mgmt_ip
 
@@ -98,22 +97,23 @@ class ServerDetailSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Assets
-        fields = ('sn','cabinet','room', 'site', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip','os',
+        fields = ('sn', 'cabinet', 'room', 'site', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip', 'os',
                   'model', 'ip', 'device_u', 'nic1tosw', 'nic2tosw', 'nic3tosw', 'nic4tosw', 'nic5tosw', 'nic6tosw',
                   'nic7tosw', 'nic8tosw', 'FC01tosw', 'FC02tosw')
+
     def get_mgmt_user(self, obj):
         return obj.assets_ServerAssets.mgmt_user
 
     def get_mgmt_password(self, obj):
         return obj.assets_ServerAssets.mgmt_password
 
-    def get_room(self,obj):
-        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom':'506机房', 'HQCroom':'108机房'}
+    def get_room(self, obj):
+        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom': '506机房', 'HQCroom': '108机房'}
         if obj.cabinet.room:
             return choices[obj.cabinet.room]
 
-    def get_site(self,obj):
-        choices = {'FG': '东莞', 'BH': '深圳福田', 'HQC':'深圳南山'}
+    def get_site(self, obj):
+        choices = {'FG': '东莞', 'BH': '深圳福田', 'HQC': '深圳南山'}
         if obj.cabinet.site:
             return choices[obj.cabinet.site]
 
@@ -201,18 +201,21 @@ class ServerDetailSerializers(serializers.ModelSerializer):
         else:
             list = []
         return list
-   
+
+
 class ServerAssetsSerializers(serializers.ModelSerializer):
     class Meta:
         model = ServerAssets
         fields = ('__all__')
- 
-class DevicePortSerializer(serializers.ModelSerializer):
+
+
+class DevicePortSerializers(serializers.ModelSerializer):
     class Meta:
         model = DevicePort
         fields = ('__all__')
 
-class AssetsSerializer(serializers.ModelSerializer):
+
+class AssetsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Assets
         fields = ('__all__')
