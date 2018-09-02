@@ -7,8 +7,8 @@ from rest_framework import viewsets
 from rest_framework import status
 
 from .models import Cabinet, OS, Assets
-from .serializers import CabinetSerializers, OSSerializers, ServerListSerializers, ServerDetailSerializers,
-                         AssetsSerializer, DevicePortSerializer, ServerAssetsSerializers
+from .serializers import CabinetSerializers, OSSerializers, ServerListSerializers, ServerDetailSerializers
+from .serializers import AssetsSerializers, DevicePortSerializers, ServerAssetsSerializers
 
 
 class CabinetViewSet(viewsets.ModelViewSet):
@@ -64,12 +64,12 @@ class ServerCreateViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
         # 批量创建deviceport
         for i in deviceportdata.keys():
             if deviceportdata[i]:
-                serializer = DevicePortSerializer(data=deviceportdata[i])
+                serializer = DevicePortSerializers(data=deviceportdata[i])
                 serializer.is_valid(raise_exception=True)
                 self.perform_create(serializer)
                 dict[i] = serializer.data
         #创建assets
-        serializer = AssetsSerializer(data=assetsdata)
+        serializer = AssetsSerializers(data=assetsdata)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         dict['assets'] = serializer.data
