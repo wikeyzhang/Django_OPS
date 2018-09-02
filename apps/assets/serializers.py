@@ -201,3 +201,18 @@ class ServerDetailSerializers(serializers.ModelSerializer):
         else:
             list = []
         return list
+   
+class ServerAssetsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = ServerAssets
+        fields = ('__all__')
+ 
+class DevicePortSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DevicePort
+        fields = ('__all__')
+
+class AssetsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Assets
+        fields = ('__all__')
