@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import status
 
-from .models import Cabinet, OS, Assets
+from .models import Cabinet, OS, Assets, DevicePort, ServerAssets
 from .serializers import CabinetSerializers, OSSerializers, ServerListSerializers, ServerDetailSerializers
 from .serializers import AssetsSerializers, DevicePortSerializers, ServerAssetsSerializers
 
@@ -86,3 +86,46 @@ class ServerCreateViewSet(mixins.CreateModelMixin,viewsets.GenericViewSet):
             responsedata[i] = dict[i]
         headers = self.get_success_headers(responsedata)
         return Response(responsedata, status=status.HTTP_201_CREATED, headers=headers)
+
+    
+class ServerDeleteViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """
+    删除服务器
+    """
+    queryset = Assets.objects.all()
+    # 重写destroy 方法，按顺序删除 serverassets,assets,deviceport
+    def destroy(self, request, *args, **kwargs):
+        dict = {}
+        # 获取id值
+        path = request.path
+        id = path.split("/")[-2]
+        instance = ServerAssets.objects.get(id = id)
+        self.perform_destroy(instance)
+        assets_instance = Assets.objects.get(id=instance.assets.id)
+        self.perform_destroy(assets_instance)
+        if instance.nic1tosw:
+            dict['nic1tosw_id'] = instance.nic1tosw.id
+        if instance.nic2tosw:
+            dict['nic2tosw_id'] = instance.nic2tosw.id
+        if instance.nic3tosw:
+            dict['nic3tosw_id'] = instance.nic3tosw.id
+        if instance.nic4tosw:
+            dict['nic4tosw_id'] = instance.nic4tosw.id
+        if instance.nic5tosw:
+            dict['nic5tosw_id'] = instance.nic5tosw.id
+        if instance.nic6tosw:
+            dict['nic6tosw_id'] = instance.nic6tosw.id
+        if instance.nic7tosw:
+            dict['nic7tosw_id'] = instance.nic7tosw.id
+        if instance.nic8tosw:
+            dict['nic8tosw_id'] = instance.nic8tosw.id
+        if instance.mgmttosw:
+            dict['mgmttosw_id'] = instance.mgmttosw.id
+        if instance.FC01tosw:
+            dict['FC01tosw_id'] = instance.FC01tosw.id
+        if instance.FC02tosw:
+            dict['FC02tosw_id'] = instance.FC02tosw.id
+        for i in dict.keys():
+            instance = DevicePort.objects.get(id=dict[i])
+            self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
