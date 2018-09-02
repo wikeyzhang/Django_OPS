@@ -29,8 +29,9 @@ class OSSerializers(serializers.ModelSerializer):
 
 
 class ServerListSerializers(serializers.ModelSerializer):
-    cabinet = serializers.CharField(source='cabinet.name')
+    server_id = serializers.SerializerMethodField()
     room = serializers.SerializerMethodField()
+    cabinet = serializers.CharField(source='cabinet.name')
     manger = serializers.CharField(source='manger.name')
     mgmt_user = serializers.SerializerMethodField()
     mgmt_password = serializers.SerializerMethodField()
@@ -42,34 +43,61 @@ class ServerListSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Assets
-        fields = ('sn', 'cabinet', 'room', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip',
+        fields = ('id', 'server_id',  'sn', 'room', 'cabinet', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip',
                   'os', 'model', 'ip', 'device_u', 'up_date')
 
+    def get_server_id(self, obj):
+        if obj.assets_ServerAssets.id:
+            return obj.assets_ServerAssets.id
+        else:
+            return ''
+
     def get_mgmt_user(self, obj):
-        return obj.assets_ServerAssets.mgmt_user
+        if obj.assets_ServerAssets.mgmt_user:
+            return obj.assets_ServerAssets.mgmt_user
+        else:
+            return ''
 
-    def get_mgmt_password(self, obj):
-        return obj.assets_ServerAssets.mgmt_password
-
-    def get_room(self, obj):
-        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom': '506机房', 'HQCroom': '108机房'}
+    def get_room(self,obj):
+        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom':'506机房', 'HQCroom':'108机房'}
         if obj.cabinet.room:
             return choices[obj.cabinet.room]
 
+    def get_mgmt_password(self, obj):
+        if obj.assets_ServerAssets.mgmt_password:
+            return obj.assets_ServerAssets.mgmt_password
+        else:
+            return ''
+
     def get_mgmt_ip(self, obj):
-        return obj.assets_ServerAssets.mgmt_ip
+        if obj.assets_ServerAssets.mgmt_ip:
+            return obj.assets_ServerAssets.mgmt_ip
+        else:
+            return ''
 
     def get_os(self, obj):
-        return obj.assets_ServerAssets.os.name
+        if obj.assets_ServerAssets.os.name:
+            return obj.assets_ServerAssets.os.name
+        else:
+            return ''
 
     def get_model(self, obj):
-        return obj.assets_ServerAssets.model.name
+        if obj.assets_ServerAssets.model.name:
+            return obj.assets_ServerAssets.model.name
+        else:
+            return ''
 
     def get_ip(self, obj):
-        return obj.assets_ServerAssets.ip
+        if obj.assets_ServerAssets.ip:
+            return obj.assets_ServerAssets.ip
+        else:
+            return ''
 
     def get_device_u(self, obj):
-        return obj.assets_ServerAssets.model.device_u
+        if obj.assets_ServerAssets.model.device_u:
+            return obj.assets_ServerAssets.model.device_u
+        else:
+            return ''
 
 
 class ServerDetailSerializers(serializers.ModelSerializer):
