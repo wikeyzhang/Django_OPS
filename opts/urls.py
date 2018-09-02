@@ -20,29 +20,7 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 
 import xadmin
 from assets import views
-# from assets.views import CabinetViewSet, OSViewSet, ServerListViewSet, ServerDetailViewSet
 
-# cabinet_list = CabinetViewSet.as_view({
-#     'get': 'list',
-#     'post': 'create'
-# })
-
-# cabinet_detail = CabinetViewSet.as_view({
-#     'get': 'retrieve',
-#     'delete': 'destroy'
-# })
-
-# os_list = OSViewSet.as_view({
-#     'get': 'list'
-# })
-
-# server_list = ServerListViewSet.as_view({
-#     'get': 'list'
-# })
-
-# server_detail = ServerDetailViewSet.as_view({
-#     'get': 'retrieve'
-# })
 
 router = DefaultRouter()
 router.register(r'cabinet', views.CabinetViewSet)
