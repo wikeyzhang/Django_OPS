@@ -113,9 +113,9 @@ class Assets(models.Model):
         ('storage', u'存储设备'),
     )
     assets_type = models.CharField(choices=assets_type_choices, max_length=100, default='server', verbose_name='资产类型')
-    name = models.CharField('资产编号', max_length=100, unique=True)
     sn = models.CharField('设备序列号', max_length=100, blank=True, null=True)
-    cabinet = models.ForeignKey(Cabinet, related_name='cabinet_Assets', verbose_name='机柜', on_delete=models.SET_NULL, null=True)
+    cabinet = models.ForeignKey(Cabinet, related_name='cabinet_Assets', verbose_name='机柜', on_delete=models.SET_NULL,
+                                null=True)
     init_u = models.SmallIntegerField('机柜起始U数', blank=True)
     manger = models.ForeignKey(Manager, verbose_name='管理员', on_delete=models.SET_NULL, null=True)
     status = models.SmallIntegerField('状态', blank=True, null=True)
@@ -191,7 +191,8 @@ class ServerAssets(models.Model):
     mgmt_user = models.CharField('管理用户', max_length=16, blank=True, null=True)
     mgmt_password = models.CharField('管理密码', max_length=16, blank=True, null=True)
     model = models.ForeignKey(ServerModel, on_delete=models.SET_NULL, null=True, verbose_name='服务器型号')
-    os = models.ForeignKey(OS, related_name='os_ServerAssets', verbose_name='操作系统', on_delete=models.SET_NULL, null=True)
+    os = models.ForeignKey(OS, related_name='os_ServerAssets', verbose_name='操作系统', on_delete=models.SET_NULL,
+                           null=True)
 
     class Meta:
         verbose_name = "服务器信息"

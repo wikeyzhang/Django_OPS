@@ -43,8 +43,9 @@ class ServerListSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Assets
-        fields = ('id', 'server_id',  'sn', 'room', 'cabinet', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip',
-                  'os', 'model', 'ip', 'device_u', 'up_date')
+        fields = (
+        'id', 'server_id', 'sn', 'room', 'cabinet', 'init_u', 'manger', 'mgmt_user', 'mgmt_password', 'mgmt_ip',
+        'os', 'model', 'ip', 'device_u', 'up_date')
 
     def get_server_id(self, obj):
         if obj.assets_ServerAssets.id:
@@ -58,8 +59,8 @@ class ServerListSerializers(serializers.ModelSerializer):
         else:
             return ''
 
-    def get_room(self,obj):
-        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom':'506机房', 'HQCroom':'108机房'}
+    def get_room(self, obj):
+        choices = {'FG304': '304机房', 'FG308': '308机房', 'BHroom': '506机房', 'HQCroom': '108机房'}
         if obj.cabinet.room:
             return choices[obj.cabinet.room]
 

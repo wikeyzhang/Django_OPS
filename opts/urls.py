@@ -21,7 +21,6 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 import xadmin
 from assets import views
 
-
 router = DefaultRouter()
 router.register(r'cabinet', views.CabinetViewSet)
 router.register(r'os', views.OSViewSet)
@@ -29,7 +28,7 @@ router.register(r'servers', views.ServerListViewSet)
 router.register(r'serverdetail', views.ServerDetailViewSet)
 router.register(r'servercreate', views.ServerCreateViewSet)
 router.register(r'serverdelete', views.ServerDeleteViewSet)
-
+router.register(r'serverupdate', views.ServerUpdateViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -38,4 +37,3 @@ urlpatterns = [
 
     url(r'^', include(router.urls))
 ]
-
