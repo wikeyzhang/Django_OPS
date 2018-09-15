@@ -3,7 +3,18 @@
 from django.db.models import Count
 from rest_framework import serializers
 
-from assets.models import Cabinet, OS, Assets, ServerAssets, DevicePort
+from assets.models import Cabinet, OS, Assets, ServerAssets, DevicePort, DeviceModel, ServerModel
+
+class DeviceModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviceModel
+        fields = ('__all__')
+        
+        
+class ServerModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServerModel
+        fields = ('__all__')
 
 
 class CabinetSerializers(serializers.ModelSerializer):
