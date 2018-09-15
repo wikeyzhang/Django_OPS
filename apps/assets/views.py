@@ -7,10 +7,26 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import status
 
-from .models import Cabinet, OS, Assets, DevicePort, ServerAssets
+from .models import Cabinet, OS, Assets, DevicePort, ServerAssets, DeviceModel, ServerModel
 from .serializers import CabinetSerializers, OSSerializers, ServerListSerializers, ServerDetailSerializers
-from .serializers import AssetsSerializers, DevicePortSerializers, ServerAssetsSerializers
+from .serializers import AssetsSerializers, DevicePortSerializers, ServerAssetsSerializers, 
+                         DeviceModelSerializer, ServerModelSerializer
 
+class DeviceModelViewset(viewsets.ModelViewSet):
+    """
+    网络设备型号
+    """
+    queryset = DeviceModel.objects.all().order_by('id')
+    serializer_class = DeviceModelSerializer
+
+
+class ServerModelViewset(viewsets.ModelViewSet):
+    """
+    服务器型号
+    """
+    queryset = ServerModel.objects.all().order_by('id')
+    serializer_class = ServerModelSerializer
+    
 
 class CabinetViewSet(viewsets.ModelViewSet):
     """
@@ -89,9 +105,9 @@ class ServerCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return Response(responsedata, status=status.HTTP_201_CREATED, headers=headers)
 
 
-class ServerUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+class ServerUpdateViewSet(mixins.UpdateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
-    服务器更新
+    服务器更新|获取服务器现有数据
     """
     queryset = ServerAssets.objects.all()
 
@@ -133,6 +149,32 @@ class ServerUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         for i in dict.keys():
             responsedata[i] = dict[i]
         return Response(responsedata, status=status.HTTP_200_OK)
+
+    # 重写Retrieve方法
+    def retrieve(self, request, *args, **kwargs):
+        dict = {'assets':{'cabinet':'', 'sn':'', 'init_u':'','manager':'','up_date':'' },
+                'deviceport':{ 'nic1tosw':{},'nic2tosw':{},'nic3tosw':{},'nic4tosw':{},
+                'nic5tosw':{},'nic6tosw':{},'nic7tosw':{},'nic8tosw':{},'FC01tosw':{},
+                'FC02tosw':{},'mgmttosw':{}},
+                'server':{'model':'','ip':'','mgmt_ip':'','mgmt_user':'','mgmt_password':'','os':''}}
+        # 获取id值
+        path = request.path
+        id = path.split("/")[-2]
+        server_instance = ServerAssets.objects.get(id=id)
+        assets_instance = server_instance.assets
+        server_serializer = ServerAssetsSerializers(server_instance)
+        for i in dict['server'].keys():
+            dict['server'][i] = server_serializer.data[i]
+        for i in dict['deviceport'].keys():
+            if server_serializer.data[i]:
+                deviceport_instance = DevicePort.objects.get(id=server_serializer.data[i])
+                deviceport_serializer = DevicePortSerializers(deviceport_instance)
+                dict['deviceport'][i] = {'net_device':deviceport_serializer.data['net_device'],
+                                           'port_num':deviceport_serializer.data['port_num']}
+        serializer = AssetsSerializers(assets_instance)
+        for i in dict['assets'].keys():
+            dict['assets'][i] = serializer.data[i]
+        return Response(dict)
 
 
 class ServerDeleteViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
